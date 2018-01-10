@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,11 +54,10 @@ public class ProductCursorAdapter extends CursorAdapter {
         contentValues.put(ProductEntry.DESCRIPTION,
                 cursor.getColumnIndexOrThrow(ProductEntry.DESCRIPTION));
 
-        final Uri uri = Uri.withAppendedPath(ProductEntry.CONTENT_URI,String.valueOf(id));
+        final Uri uri = Uri.withAppendedPath(ProductEntry.CONTENT_URI, String.valueOf(id));
         btnSell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("logs", "uri = " + uri.toString());
                 mContext.getContentResolver().
                         update(uri, contentValues, null, null);
             }

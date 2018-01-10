@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -27,8 +26,6 @@ import ua.bellkross.android.inventory.data.ProductContract;
 import static ua.bellkross.android.inventory.data.ProductContract.ProductEntry;
 
 public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    public static final String TAG = "logs";
 
     private Uri mUri;
     private boolean mEdit;
@@ -61,7 +58,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
         if (mEdit) {
             getSupportActionBar().setTitle(R.string.edit_product);
-            Log.d(TAG, "uri = " + mUri);
         } else {
             getSupportActionBar().setTitle(R.string.new_product);
             mUri = ProductContract.ProductEntry.CONTENT_URI;
@@ -115,7 +111,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         values.put(ProductEntry.PRICE, String.valueOf(price < 0 ? 0 : price));
         values.put(ProductEntry.DESCRIPTION, description.isEmpty() ? "-" : description);
 
-        if(mEdit){
+        if (mEdit) {
             String id = String.valueOf(ContentUris.parseId(mUri));
             String selectionClause = ProductEntry._ID + " = ?";
             String[] selectionArgs = {id};
@@ -173,7 +169,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     String id = "" + ContentUris.parseId(mUri);
                     String selectionClause = ProductEntry._ID + " = ?";
                     String[] selectionArgs = {id};
-                    getContentResolver().delete(mUri,selectionClause,selectionArgs);
+                    getContentResolver().delete(mUri, selectionClause, selectionArgs);
                     finish();
                 }
                 return true;
@@ -185,6 +181,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
                     return true;
                 }
+
 
                 // Otherwise if there are unsaved changes, setup a dialog to warn the user.
                 // Create a click listener to handle the user confirming that
@@ -206,19 +203,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void showUnsavedChangesDialog(DialogInterface.OnClickListener discardButtonClickListener) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage(R.string.unsaved_changes_dialog_msg);
-            builder.setPositiveButton(R.string.discard, discardButtonClickListener);
-            builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    if (dialog != null) {
-                        dialog.dismiss();
-                    }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.unsaved_changes_dialog_msg);
+        builder.setPositiveButton(R.string.discard, discardButtonClickListener);
+        builder.setNegativeButton(R.string.keep_editing, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
                 }
-            });
+            }
+        });
 
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override

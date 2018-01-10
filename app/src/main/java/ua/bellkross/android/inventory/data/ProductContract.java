@@ -11,7 +11,8 @@ public class ProductContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_PRODUCTS = "products";
 
-    public ProductContract() {}
+    public ProductContract() {
+    }
 
 
     public static final class ProductEntry implements BaseColumns {
@@ -26,7 +27,8 @@ public class ProductContract {
 
         public static final String TABLE_NAME = "products";
 
-        public static final String _ID = BaseColumns._ID;;
+        public static final String _ID = BaseColumns._ID;
+        ;
         public static final String COUNT = "count";
         public static final String NAME = "name";
         public static final String PRICE = "price";

@@ -4,11 +4,10 @@ package ua.bellkross.android.inventory.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import static ua.bellkross.android.inventory.data.ProductContract.ProductEntry;
 
-public class ProductDBHelper extends SQLiteOpenHelper{
-    
-    public static final String LOG_TAG = ProductDBHelper.class.getSimpleName();
+public class ProductDBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "inventory.db";
 
