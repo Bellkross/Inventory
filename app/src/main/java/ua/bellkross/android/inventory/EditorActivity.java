@@ -18,14 +18,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import ua.bellkross.android.inventory.data.ProductContract;
 
 import static ua.bellkross.android.inventory.data.ProductContract.ProductEntry;
 
-public class EditorActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class EditorActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private Uri mUri;
     private boolean mEdit;
@@ -37,7 +37,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText mEditTextName;
     private EditText mEditTextPrice;
     private EditText mEditTextDescription;
-    private TextView mTextViewCount;
+    private EditText mEditTextCount;
     private Button mButtonPlus;
     private Button mButtonMinus;
 
@@ -66,9 +66,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mEditTextName = findViewById(R.id.et_name);
         mEditTextPrice = findViewById(R.id.et_price);
         mEditTextDescription = findViewById(R.id.et_description);
-        mTextViewCount = findViewById(R.id.tv_count);
+        mEditTextCount = findViewById(R.id.tv_count);
         mButtonPlus = findViewById(R.id.plus);
         mButtonMinus = findViewById(R.id.minus);
+
 
         mEditTextName.setOnTouchListener(mTouchListener);
         mEditTextPrice.setOnTouchListener(mTouchListener);
@@ -79,9 +80,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mButtonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String countValue = mTextViewCount.getText().toString().trim();
+                String countValue = mEditTextCount.getText().toString().trim();
                 int count = Integer.parseInt(countValue);
-                mTextViewCount.setText(String.valueOf(++count));
+                mEditTextCount.setText(String.valueOf(++count));
 
             }
         });
@@ -89,9 +90,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mButtonMinus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String countValue = mTextViewCount.getText().toString().trim();
+                String countValue = mEditTextCount.getText().toString().trim();
                 int count = Integer.parseInt(countValue);
-                mTextViewCount.setText((--count) < 0 ? "0" : String.valueOf(count));
+                mEditTextCount.setText((--count) < 0 ? "0" : String.valueOf(count));
 
             }
         });
@@ -100,10 +101,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void insertProduct() {
-        Integer count = Integer.parseInt(mTextViewCount.getText().toString().trim());
+        Integer count = Integer.parseInt(mEditTextCount.getText().toString().trim());
         String name = mEditTextName.getText().toString().trim();
         Integer price = Integer.parseInt(mEditTextPrice.getText().toString().trim());
         String description = mEditTextDescription.getText().toString().trim();
+
+        if((float)(count/10000)>1){
+            count = 9999;
+        }
 
         ContentValues values = new ContentValues();
         values.put(ProductEntry.NAME, name.isEmpty() ? "unnamed" : name);
@@ -124,11 +129,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     selectionArgs);
 
             if (rowsUpdated == 0) {
-                // If the new content URI is null, then there was an error with insertion.
                 Toast.makeText(this, getString(R.string.editor_update_product_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the insertion was successful and we can display a toast.
                 Toast.makeText(this, getString(R.string.editor_update_product_successful) +
                                 " with id " + id,
                         Toast.LENGTH_SHORT).show();
@@ -139,11 +142,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             newUri = getContentResolver().insert(ProductEntry.CONTENT_URI, values);
 
             if (newUri == null) {
-                // If the new content URI is null, then there was an error with insertion.
                 Toast.makeText(this, getString(R.string.editor_insert_product_failed),
                         Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the insertion was successful and we can display a toast.
                 Toast.makeText(this, getString(R.string.editor_insert_product_successful) +
                                 "with id " + ContentUris.parseId(newUri),
                         Toast.LENGTH_SHORT).show();
@@ -154,16 +155,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
-            // Respond to a click on the "Save" menu option
             case R.id.action_save:
-                // Save pet to database
                 insertProduct();
-                // Exit activity
                 finish();
                 return true;
-            // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
                 if (mEdit) {
                     String id = "" + ContentUris.parseId(mUri);
@@ -173,29 +169,20 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     finish();
                 }
                 return true;
-            // Respond to a click on the "Up" arrow button in the app bar
             case android.R.id.home:
-                // If the pet hasn't changed, continue with navigating up to parent activity
-                // which is the {@link CatalogActivity}.
                 if (!mProductHasChanged) {
                     NavUtils.navigateUpFromSameTask(EditorActivity.this);
                     return true;
                 }
 
-
-                // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-                // Create a click listener to handle the user confirming that
-                // changes should be discarded.
                 DialogInterface.OnClickListener discardButtonClickListener =
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // User clicked "Discard" button, navigate to parent activity.
                                 NavUtils.navigateUpFromSameTask(EditorActivity.this);
                             }
                         };
 
-                // Show a dialog that notifies the user they have unsaved changes
                 showUnsavedChangesDialog(discardButtonClickListener);
                 return true;
         }
@@ -220,8 +207,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu options from the res/menu/menu_editor.xml file.
-        // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.menu_editor, menu);
         return true;
     }
@@ -258,36 +243,30 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mEditTextName.setText(name);
         mEditTextPrice.setText(String.valueOf(price));
         mEditTextDescription.setText(description);
-        mTextViewCount.setText(String.valueOf(count));
+        mEditTextCount.setText(String.valueOf(count));
     }
 
     @Override
     public void onBackPressed() {
-        // If the pet hasn't changed, continue with handling back button press
         if (!mProductHasChanged) {
             super.onBackPressed();
             return;
         }
 
-        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
-        // Create a click listener to handle the user confirming that changes should be discarded.
         DialogInterface.OnClickListener discardButtonClickListener =
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // User clicked "Discard" button, close the current activity.
                         finish();
                     }
                 };
 
-        // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        // If this is a new pet, hide the "Delete" menu item.
         if (!mEdit) {
             MenuItem menuItem = menu.findItem(R.id.action_delete);
             menuItem.setVisible(false);
@@ -300,6 +279,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mEditTextName.setText("");
         mEditTextPrice.setText("");
         mEditTextDescription.setText("");
-        mTextViewCount.setText("");
+        mEditTextCount.setText("");
     }
 }

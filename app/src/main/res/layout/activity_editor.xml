@@ -11,11 +11,12 @@
         android:id="@+id/container_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.812"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
         <TextView
             style="@style/CategoryStyle"
@@ -27,8 +28,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingLeft="4dp"
-            android:hint="name" />
+            android:hint="name"
+            android:paddingLeft="4dp" />
 
     </LinearLayout>
 
@@ -55,8 +56,8 @@
             <EditText
                 android:id="@+id/et_price"
                 style="@style/EditorFieldStyle"
-                android:inputType="number"
-                android:hint="price" />
+                android:hint="price"
+                android:inputType="numberDecimal" />
 
             <TextView
                 style="@style/EditorUnitsStyle"
@@ -85,11 +86,11 @@
             android:background="@drawable/count_circle"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
+            android:text="+"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:text="+" />
+            android:textSize="16sp" />
 
-        <TextView
+        <EditText
             android:id="@+id/tv_count"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -97,6 +98,7 @@
             android:background="@drawable/count_circle"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
+            android:inputType="number"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             tools:text="110" />
@@ -110,9 +112,9 @@
             android:background="@drawable/count_circle"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
+            android:text="-"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
-            android:text="-" />
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -139,8 +141,8 @@
             <EditText
                 android:id="@+id/et_description"
                 style="@style/EditorFieldStyle"
-                android:inputType="textMultiLine"
-                android:hint="description" />
+                android:hint="description"
+                android:inputType="textMultiLine" />
 
         </RelativeLayout>
     </LinearLayout>
@@ -150,10 +152,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        android:text="order"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="order"/>
-
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
