@@ -61,10 +61,10 @@ public class InventoryActivity extends AppCompatActivity implements LoaderManage
 
     private void insertProduct(){
         ContentValues v = new ContentValues();
-        v.put(ProductEntry.COUNT,1);
-        v.put(ProductEntry.NAME,"name");
-        v.put(ProductEntry.PRICE,3);
-        v.put(ProductEntry.DESCRIPTION,"description");
+        v.put(ProductEntry.COUNT,10);
+        v.put(ProductEntry.NAME,"Apple iPhone X (10) 64Gb Space Gray");
+        v.put(ProductEntry.PRICE,1220);
+        v.put(ProductEntry.DESCRIPTION,"Компания Apple не перестает удивлять.");
 
         getContentResolver().insert(ProductEntry.CONTENT_URI, v);
     }

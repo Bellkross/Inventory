@@ -83,7 +83,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mButtonPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String countValue = mTextViewCount.getText().toString().trim();
                 int count = Integer.parseInt(countValue);
                 mTextViewCount.setText(String.valueOf(++count));
@@ -105,18 +104,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void insertProduct() {
-        String count = mTextViewCount.getText().toString().trim();
+        Integer count = Integer.parseInt(mTextViewCount.getText().toString().trim());
         String name = mEditTextName.getText().toString().trim();
-        String price = mEditTextPrice.getText().toString().trim();
+        Integer price = Integer.parseInt(mEditTextPrice.getText().toString().trim());
         String description = mEditTextDescription.getText().toString().trim();
 
-        //check
-
         ContentValues values = new ContentValues();
-        values.put(ProductEntry.NAME, name);
-        values.put(ProductEntry.COUNT, count);
-        values.put(ProductEntry.PRICE, price);
-        values.put(ProductEntry.DESCRIPTION, description);
+        values.put(ProductEntry.NAME, name.isEmpty() ? "unnamed" : name);
+        values.put(ProductEntry.COUNT, String.valueOf(count < 0 ? 0 : count));
+        values.put(ProductEntry.PRICE, String.valueOf(price < 0 ? 0 : price));
+        values.put(ProductEntry.DESCRIPTION, description.isEmpty() ? "-" : description);
 
         if(mEdit){
             String id = String.valueOf(ContentUris.parseId(mUri));
@@ -242,7 +239,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 ProductEntry.DESCRIPTION
         };
         return new CursorLoader(this,
-                ProductEntry.CONTENT_URI,
+                mUri,
                 projection,
                 null,
                 null,
@@ -265,6 +262,40 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mEditTextPrice.setText(String.valueOf(price));
         mEditTextDescription.setText(description);
         mTextViewCount.setText(String.valueOf(count));
+    }
+
+    @Override
+    public void onBackPressed() {
+        // If the pet hasn't changed, continue with handling back button press
+        if (!mProductHasChanged) {
+            super.onBackPressed();
+            return;
+        }
+
+        // Otherwise if there are unsaved changes, setup a dialog to warn the user.
+        // Create a click listener to handle the user confirming that changes should be discarded.
+        DialogInterface.OnClickListener discardButtonClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        // User clicked "Discard" button, close the current activity.
+                        finish();
+                    }
+                };
+
+        // Show dialog that there are unsaved changes
+        showUnsavedChangesDialog(discardButtonClickListener);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        // If this is a new pet, hide the "Delete" menu item.
+        if (!mEdit) {
+            MenuItem menuItem = menu.findItem(R.id.action_delete);
+            menuItem.setVisible(false);
+        }
+        return true;
     }
 
     @Override
